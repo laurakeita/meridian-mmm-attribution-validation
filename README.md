@@ -11,7 +11,6 @@ Built by [Laura Keita](https://github.com/laurakeita) — Growth Marketing & Str
 MMM/
 ├── MMM_meridian.ipynb       # Full analysis notebook (outputs included)
 ├── data/
-│   ├── sample_data.csv          # 10-row preview of the dataset
 │   └── synthetic_mmm_data.csv  # 104-week synthetic dataset (Meta, Google, TikTok)
 ├── outputs/
 │   ├── summary_output.html      # Meridian MMM Report — model fit, ROI, response curves
