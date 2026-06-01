@@ -1,0 +1,13 @@
+meridian @ git+https://github.com/google/meridian.git
+tensorflow>=2.13
+tensorflow-probability>=0.21
+pandas>=2.0
+numpy>=1.24
+matplotlib>=3.7
+seaborn>=0.12
+statsmodels>=0.14
+scikit-learn>=1.3
+arviz>=0.15
+altair>=5.0
+tqdm
+psutil
