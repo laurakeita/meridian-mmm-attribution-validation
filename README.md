@@ -103,7 +103,7 @@ These metrics evaluate whether the model can accurately recover underlying media
 
 ## Quick Start (Google Colab)
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/laurakeita/MMM/blob/main/MMM_meridian.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/laurakeita/meridian-mmm-attribution-validation/blob/main/MMM_meridian.ipynb)
 
 ```python
 # 1. Install dependencies
