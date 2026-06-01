@@ -11,7 +11,7 @@ Built by [Laura Keita](https://github.com/laurakeita) — Growth Marketing & Str
 MMM/
 ├── data/
 │   ├── sample_data.csv          # 10-row preview of the dataset
-│   └── synthetic_mmm_data.csv  # 104-week synthetic dataset (2 channels)
+│   └── synthetic_mmm_data.csv  # 104-week synthetic dataset (Meta, Google, TikTok)
 ├── notebooks/
 │   ├── 01_data_audit.ipynb          # EDA: spend share, correlation, VIF
 │   ├── 02_train_meridian_mmm.ipynb  # Bayesian MMM training
