@@ -14,15 +14,15 @@ The project explores key challenges commonly faced by Measurement Science, Growt
 - **Channel Identifiability** — how does spend correlation between channels affect attribution recovery?
 - **Bayesian Marketing Mix Modeling** — MCMC-based posterior estimation with convergence diagnostics
 
-A key finding from this project is that strong predictive performance does not necessarily imply accurate attribution recovery. The results demonstrate how channel identifiability can significantly influence incrementality measurement even when model convergence and predictive accuracy remain strong.
+A key finding from this project is that good predictive performance does not necessarily imply accurate attribution recovery. The results demonstrate how channel identifiability can significantly influence incrementality measurement even when model convergence is clean and prediction error is low.
 
 ---
 
 ## Project Structure
 
 ```
-MMM/
-├── MMM_meridian.ipynb       # Full analysis notebook (outputs included)
+meridian-mmm-attribution-validation/
+├── MMM_meridian.ipynb       # Full analysis notebook (narrative + outputs included)
 ├── data/
 │   └── synthetic_mmm_data.csv  # 104-week synthetic dataset (Meta, Google, TikTok)
 ├── outputs/
@@ -31,7 +31,8 @@ MMM/
 ├── images/
 │   ├── rhat_convergence.png     # R-hat convergence diagnostic (all chains ≤ 1.1)
 │   └── roi_by_channel.png       # ROI by channel with 90% credible interval
-└── requirements.txt
+├── requirements.txt
+└── LICENSE
 ```
 
 ---
@@ -59,7 +60,7 @@ These questions are directly relevant to measurement and optimisation functions 
 | Data Audit | Detects media/impression/KPI columns dynamically; runs spend-share, correlation, and VIF analysis to assess channel identifiability risks |
 | Model Training | Fits a Bayesian MMM with log-normal ROI priors using Meridian's MCMC sampler (5 chains × 2 000 posterior draws) |
 | Model Diagnostics | Checks convergence (trace plots, R-hat ≤ 1.1), plots contribution waterfall, ROI bar chart, response curves, adstock decay |
-| Budget Optimisation | Re-allocates the existing budget to maximise incremental revenue; spend constraints derived dynamically from actual channel spend |
+| Budget Optimisation | Re-allocates the existing budget to maximise incremental revenue using Meridian's fixed-budget scenario with ±30% per-channel spend constraints |
 | Attribution Validation | Compares Meridian's estimated ROI against known ground-truth values to quantify attribution accuracy and ROI recovery error |
 
 ---
@@ -94,9 +95,10 @@ These metrics evaluate whether the model can accurately recover underlying media
 
 ## Key Design Decisions
 
+- **Fully reproducible in Colab** — the dataset is loaded directly from this repository (no Google Drive setup), so the notebook runs top-to-bottom with one click.
 - **Dynamic column detection** — media, impression, and KPI columns are inferred from column names rather than hardcoded, making the measurement framework portable across datasets.
 - **Dynamic date ranges** — optimisation period and summary reports use `data['date'].min()/max()` instead of hardcoded strings.
-- **VIF analysis before modelling** — Variance Inflation Factor is calculated across channels to assess multicollinearity and flag potential channel identifiability issues prior to model fitting.
+- **VIF analysis before modelling** — Variance Inflation Factor is calculated across media channels (with an intercept term) to assess multicollinearity and flag potential channel identifiability issues prior to model fitting.
 - **Controls guarded** — `Offline Discount` is only passed to Meridian if the column exists in the loaded data.
 
 ---
@@ -105,16 +107,7 @@ These metrics evaluate whether the model can accurately recover underlying media
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/laurakeita/meridian-mmm-attribution-validation/blob/main/MMM_meridian.ipynb)
 
-```python
-# 1. Install dependencies
-!pip install git+https://github.com/google/meridian.git altair -q
-
-# 2. Mount Drive and upload your CSV
-from google.colab import drive
-drive.mount('/content/drive')
-
-# 3. Run all cells top to bottom
-```
+Click the badge and run all cells top to bottom — the dataset is loaded directly from this repository, so no Google Drive setup or file upload is required. A GPU runtime is recommended for the MCMC sampling step.
 
 ---
 
@@ -145,7 +138,9 @@ drive.mount('/content/drive')
 | Google | 3.00 | 1.90 | 37% |
 | **Average** | | | **24.9%** |
 
-Although the model achieved strong convergence and prediction performance, attribution recovery remained more challenging due to channel identifiability limitations — particularly for Google, where limited spend variation makes it harder to isolate incremental effects.
+> Ground-truth ROI was defined for Meta and Google during synthetic data generation; TikTok is therefore reported descriptively but excluded from attribution validation.
+
+Although the model achieved clean convergence and low prediction error, attribution recovery remained more challenging due to channel identifiability limitations — particularly for Google, where limited spend variation makes it harder to isolate incremental effects.
 
 ### Budget Optimisation (fixed budget, ±30% constraint)
 
@@ -162,7 +157,7 @@ Although the model achieved strong convergence and prediction performance, attri
 
 A major finding from this project is that **attribution accuracy and prediction accuracy are fundamentally different objectives** in marketing measurement.
 
-Although the model achieved strong convergence (R-hat ≈ 1.001) and low prediction error (MAPE ≈ 9%), channel-level ROI recovery remained imperfect — with an average recovery error of 24.9%.
+Although the model achieved strong convergence (R-hat ≈ 1.001) and low prediction error (MAPE ≈ 9%, with a moderate R² of 0.30), channel-level ROI recovery remained imperfect — with an average recovery error of 24.9%.
 
 The results suggest that attribution performance is heavily influenced by **channel identifiability**. When multiple media channels move together, MMM can successfully estimate overall media impact while still struggling to isolate individual channel causal effects. This is a known limitation in Bayesian MMM frameworks and reflects a common real-world challenge faced by growth, measurement, and marketing science teams.
 
